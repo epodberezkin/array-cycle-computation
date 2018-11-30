@@ -73,13 +73,13 @@ class ArrayCycleComputation {
 
         //преобразуем в цикле каждый массив по одному шагу, когда сравняются - в slowArray начало цикла m
         int iteration = 0;
-        while (!Arrays.equals(slowArray,fastArray)){
-            ArrayHelper.distributeMaxElement(1, slowArray);
-            ArrayHelper.distributeMaxElement(1, fastArray);
-            iteration ++;
-        }
+        do {
+                ArrayHelper.distributeMaxElement(1, slowArray);
+                ArrayHelper.distributeMaxElement(1, fastArray);
+                iteration++; 
+        } while (!Arrays.equals(slowArray, fastArray));
 
-        //возвращаем количство шагов до начала цикла и значение массива на этом шаге,
+         //возвращаем количство шагов до начала цикла и значение массива на этом шаге,
         //чтобы не считать заново при нахождении длины цикла
         return new ArrayState(iteration, slowArray);
     }
