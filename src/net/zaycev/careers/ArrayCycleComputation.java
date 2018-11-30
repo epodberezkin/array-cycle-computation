@@ -25,7 +25,7 @@ class ArrayCycleComputation {
         //находим первый элемент цикла
         cycleFirstElement = findFirstCycleIteration(meetPoint, initialDataArray);
         //находим длину цикла
-        cycleLength = findCycleLength(cycleFirstElement,meetPoint);
+        cycleLength = findCycleLength(cycleFirstElement);
         return (cycleLength > -1);
      }
 
@@ -49,16 +49,16 @@ class ArrayCycleComputation {
         int[] fastArray = Arrays.copyOf(slowArray,slowArray.length);
 
         int iteration = 0;
-        do{
+        do {
             ArrayHelper.distributeMaxElement(1, slowArray);
             ArrayHelper.distributeMaxElement(2, fastArray);
-            if (iteration<Integer.MAX_VALUE) {
-                iteration ++;
+            if (iteration < Integer.MAX_VALUE) {
+                iteration++;
             } else {
                 //если счетчик достиг максимального значения, считаем что в заданных ограничениях цикл найти не удается
                 return null;
             }
-        }while (!Arrays.equals(slowArray,fastArray));
+            } while (!Arrays.equals(slowArray, fastArray));
 
         //возвращаем найденное состояние медленного массива
         return new ArrayState(iteration,slowArray);
@@ -73,23 +73,22 @@ class ArrayCycleComputation {
 
         //преобразуем в цикле каждый массив по одному шагу, когда сравняются - в slowArray начало цикла m
         int iteration = 0;
-        do {
-                ArrayHelper.distributeMaxElement(1, slowArray);
-                ArrayHelper.distributeMaxElement(1, fastArray);
-                iteration++; 
-        } while (!Arrays.equals(slowArray, fastArray));
 
-         //возвращаем количство шагов до начала цикла и значение массива на этом шаге,
-        //чтобы не считать заново при нахождении длины цикла
+        while (!Arrays.equals(slowArray, fastArray)) {
+            ArrayHelper.distributeMaxElement(1, slowArray);
+            ArrayHelper.distributeMaxElement(1, fastArray);
+            iteration++;
+        }
+        //возвращаем количство шагов до начала цикла и значение массива на этом шаге,
         return new ArrayState(iteration, slowArray);
     }
 
-    //зная начало цикла выполняем функцию распределения над Xi, пока их значения не совпадут
-    // количество шагов + i - начало цикла = длина цикла
-    private static int findCycleLength (ArrayState cycleFirstElement, ArrayState cycleMeetElement) throws Exception {
+    //зная начало цикла Xm выполняем над ним функцию распределения, пока значения не совпадут
+    // количество шагов = длина цикла
+    private static int findCycleLength (ArrayState cycleFirstElement) throws Exception {
 
-        //в fastArray значение cycleMeetElement
-        int[] fastArray = Arrays.copyOf(cycleMeetElement.getDataArray(),cycleMeetElement.getDataArray().length);
+        //в fastArray значение cycleFirstElement
+        int[] fastArray = Arrays.copyOf(cycleFirstElement.getDataArray(),cycleFirstElement.getDataArray().length);
         //выполняем функцию distributeMaxElement, пока значение fastArray не станет равным началу цикла
         int iteration = 0;
         do {
@@ -102,6 +101,6 @@ class ArrayCycleComputation {
             }
         } while (!Arrays.equals(cycleFirstElement.getDataArray(), fastArray));
         //возвращаем длину цикла
-        return iteration + cycleMeetElement.getIteration() - cycleFirstElement.getIteration() ;
+        return iteration;
     }
 }
