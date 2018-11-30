@@ -88,18 +88,19 @@ class ArrayCycleComputation {
     // количество шагов + i - начало цикла = длина цикла
     private static int findCycleLength (ArrayState cycleFirstElement, ArrayState cycleMeetElement) throws Exception {
 
+        //в fastArray значение cycleMeetElement
         int[] fastArray = Arrays.copyOf(cycleMeetElement.getDataArray(),cycleMeetElement.getDataArray().length);
-
+        //выполняем функцию distributeMaxElement, пока значение fastArray не станет равным началу цикла
         int iteration = 0;
-        while (!Arrays.equals(cycleFirstElement.getDataArray(), fastArray)) {
+        do {
             ArrayHelper.distributeMaxElement(1, fastArray);
-            if (iteration<Integer.MAX_VALUE) {
-                iteration ++;
+            if (iteration < Integer.MAX_VALUE) {
+                iteration++;
             } else {
                 //если счетчик достиг максимального значения, считаем что в заданных ограничениях длину цикла найти не удается
                 return -1;
             }
-        }
+        } while (!Arrays.equals(cycleFirstElement.getDataArray(), fastArray));
         //возвращаем длину цикла
         return iteration + cycleMeetElement.getIteration() - cycleFirstElement.getIteration() ;
     }
